@@ -22,18 +22,14 @@ class _CancelledBookedTicketDisplay extends State<CancelledBookedTicketDisplay> 
     
 return Consumer<TimsProvider>(
   builder: (context, provider, _) {
-    final List<Flights?> bookedFlights = provider.bookedFlights;
+    final List<Flights?> bookedFlights = provider.bookedFlightscancelled;
 
     return ListView.builder(
       itemCount: bookedFlights.length,
       itemBuilder: (context, index) {
         final flight = bookedFlights[index];
 
-        // Check if the flight is cancelled
-        bool isCancelled = provider.bookedFlightsList.firstWhere((bf) => bf.flight == flight!.id).isCancelled;
-
-        // Return the UI elements for each flight that is not cancelled
-        if (isCancelled) {
+    
           return Dismissible(
             key: UniqueKey(),
             direction: DismissDirection.horizontal,
@@ -42,15 +38,18 @@ return Consumer<TimsProvider>(
      final userId = user[0]!.userId;
     final flightId = flight.id;
 
-    final String response  = await reBookedFlight(userId, flightId);
-    context.read<TimsProvider>().reBookedFlightCancellationStatus(flightId);
-      
-       ScaffoldMessenger.of(context).showSnackBar(
-       SnackBar(
-      content: Text(response),
-      ),
-    );
+    final bool response  = await reBookedFlight(userId, flightId);
 
+ 
+                  if(response) {
+                    context.read<TimsProvider>().rebooked(flight);
+                    context.read<TimsProvider>().removeBookedFlightCancelled(index);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("rebooked suceesfully!"),
+                    ),
+                  );
+                  }
   },
             child: Ticket(
               id: flight!.id,
@@ -61,12 +60,10 @@ return Consumer<TimsProvider>(
               price: flight.price,
               isBooked: true,
               isCancelled: true,
+              index: index,
             ),
           );
-        } else {
-          // Return an empty container for cancelled flights
-          return Container();
-        }
+      
       },
     );
   },

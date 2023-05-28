@@ -50,3 +50,31 @@ Future<Users> fetchUsersByEmail(String email) async {
     throw Exception('Failed to fetch users');
   }
 }
+
+
+Future<bool> registerUser(String userId,String email, String password, String firstName, String lastName) async {
+  final url = 'http://127.0.0.1:8000/register/'; // Replace with your API endpoint
+  
+ 
+
+  // Perform user registration
+ final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/register/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'userId': userId,
+        'email': email,
+        'password': password,
+        'firstname': firstName,
+        'lastname': lastName,
+      }),
+    );
+
+  if (response.statusCode == 201) {
+      return true;
+  } else {
+    return false;
+  }
+}

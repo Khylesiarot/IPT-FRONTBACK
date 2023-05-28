@@ -134,6 +134,10 @@ class _LoginState extends State<Login> {
 
                       final List<Flights?> bookedlist = await fetchUserBookedFlights(users.userId);
                        context.read<TimsProvider>().flightsBooked(bookedlist);
+                       final List<Flights?> bookedlistC = await fetchUserBookedFlightsCancelled(users.userId);
+                       context.read<TimsProvider>().addAllBookedFlightCancelled(bookedlistC);
+
+
                                             Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -1,6 +1,8 @@
 import 'package:airlogin/homepage/bookedticks_display.dart';
+import 'package:airlogin/provider/timmy_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:airlogin/constant.dart';
+import 'package:provider/provider.dart';
 import '../components/hoverMouse.dart';
 import '../main.dart';
 import 'bookedtickets.dart';
@@ -128,6 +130,7 @@ class Profile extends StatelessWidget {
                         TextButton(
                           child: Text('Logout'),
                           onPressed: () {
+                            context.read<TimsProvider>().logout();
                             Navigator.push(
                               context,
                               MaterialPageRoute(

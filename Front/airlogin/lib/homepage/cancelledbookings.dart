@@ -65,6 +65,21 @@ class CancelledBookedTickets extends StatelessWidget {
           ),
         ],
       ),
+
+      //edit here 
+    floatingActionButton: FloatingActionButton(
+      onPressed: (){
+        Navigator.pop(context);
+      },
+      backgroundColor: Colors.blue, // Replace with your desired button color
+      shape: const CircleBorder(),
+      child: const Icon(
+        Icons.arrow_back_ios,
+        color: Colors.white,
+      ),
+    ),
+    floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+  
   }
 }

@@ -22,6 +22,10 @@ final List<Flights?> _bookedFlights = [];
 
 List<Flights?> get bookedFlights => _bookedFlights;
 
+final List<Flights?> _bookedFlightscancelled = [];
+
+List<Flights?> get bookedFlightscancelled => _bookedFlightscancelled;
+
 
   void addUser(Users user) {
     _usersList.add(user);
@@ -39,7 +43,10 @@ List<Flights?> get bookedFlights => _bookedFlights;
     notifyListeners();
   }
 
-
+  void removeflight(int flight) {
+    _flightsList.removeAt(flight);
+    notifyListeners();
+  }
   
   void addAllBookedFlight(List<BookedFlights> bookedFlight) {
     _bookedFlightsList.addAll(bookedFlight);
@@ -56,25 +63,40 @@ List<Flights?> get bookedFlights => _bookedFlights;
     notifyListeners();
   }
 
+   void removedBookedFlightSS(int  bookedFlight) {
+    _bookedFlights.removeAt(bookedFlight);
+    notifyListeners();
+  }
 
+  void addAllBookedFlightCancelled(List<Flights?> bookedFlight) {
+    _bookedFlightscancelled.addAll(bookedFlight);
+    notifyListeners();
+  }
 
-void editBookedFlightCancellationStatus(String bookedFlightId) {
-    final bookedFlight = _bookedFlightsList.firstWhere(
-      (flight) => flight.id == bookedFlightId
-    );
+   void lBookedFlightCancelled(Flights bookedFlight) {
+    _bookedFlightscancelled.add(bookedFlight);
+    notifyListeners();
+  }
+   void rebooked(Flights bookedFlight) {
+    _bookedFlights.add(bookedFlight);
+    notifyListeners();
+  }
 
-    bookedFlight.isCancelled = true;
+  void removeBookedFlightCancelled(int bookedFlight) {
+    _bookedFlightscancelled.removeAt(bookedFlight);
     notifyListeners();
   }
 
 
+void logout()
+{
+  _usersList.clear();
+  _flightsList.clear();
+  _bookedFlightscancelled.clear();
+  _bookedFlightsList.clear();
+  _bookedFlights.cast();
+  notifyListeners();
+}
 
-void reBookedFlightCancellationStatus(String bookedFlightId) {
-    final bookedFlight = _bookedFlightsList.firstWhere(
-      (flight) => flight.id == bookedFlightId
-    );
 
-    bookedFlight.isCancelled = false;
-    notifyListeners();
-  }
 }

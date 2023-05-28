@@ -85,7 +85,7 @@ Future<List<BookedFlights>> fetchBookedFlights(String userId) async {
   }
 }
 
-Future<String> cancelBookedFlight(String userId, String flightId) async {
+Future<bool> cancelBookedFlight(String userId, String flightId) async {
   final url =
       'http://127.0.0.1:8000/users/$userId/bookedflights/$flightId/cancel/';
 
@@ -93,17 +93,17 @@ Future<String> cancelBookedFlight(String userId, String flightId) async {
     final response = await http.put(Uri.parse(url));
 
     if (response.statusCode == 201) {
-      return response.body;
+      return true;
     } else {
-      return response.body;
+      return false;
     }
   } catch (error) {
     print('Error cancelling booked flight: $error');
   }
-  return "Error cancelling booked flight";
+  return false;
 }
 
-Future<String> reBookedFlight(String userId, String flightId) async {
+Future<bool> reBookedFlight(String userId, String flightId) async {
   final url =
       'http://127.0.0.1:8000/users/$userId/bookedflights/$flightId/rebooked/';
 
@@ -111,12 +111,12 @@ Future<String> reBookedFlight(String userId, String flightId) async {
     final response = await http.put(Uri.parse(url));
 
     if (response.statusCode == 201) {
-      return response.body;
+      return true;
     } else {
-      return response.body;
+      return false;
     }
   } catch (error) {
     print('Error cancelling booked flight: $error');
   }
-  return "Error cancelling booked flight";
+  return true;
 }

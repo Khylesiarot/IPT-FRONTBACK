@@ -16,6 +16,7 @@ class Ticket extends StatelessWidget {
   final int price;
   final bool isBooked;
   final bool isCancelled;
+  final int index;
 
   const Ticket({
     super.key,
@@ -26,7 +27,7 @@ class Ticket extends StatelessWidget {
     this.departureDate,
     required this.price,
     required this.isBooked,
-    required this.isCancelled,
+    required this.isCancelled, required this.index,
   });
 
   @override
@@ -120,7 +121,7 @@ class Ticket extends StatelessWidget {
                                     flight: flightId,
                                     isCancelled: false);
                                 final bool isSuc;
-                                isSuc =
+                                
                                     // await createBookedFlight(newBookedFlight);
                                     isSuc = await createBookedFlight(
                                         newBookedFlight, userId, flightId);
@@ -134,9 +135,8 @@ class Ticket extends StatelessWidget {
                                     price: price,
                                   );
 
-                                  context
-                                      .read<TimsProvider>()
-                                      .addBookedFlightSS(bookedFlight);
+                                  context.read<TimsProvider>().addBookedFlightSS(bookedFlight);
+                                  context.read<TimsProvider>().removeflight(index);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

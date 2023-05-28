@@ -23,18 +23,9 @@ class _TicketDisplayState extends State<TicketDisplay> {
           itemCount: flightsList.length,
           itemBuilder: (context, index) {
             final flight = flightsList[index];
-            final String id = flight!.id;
-
-            // Check if the flight is booked
-            bool isBooked = provider.bookedFlightsList.any((bf) => bf.flight == id);
-
-            // Check if the flight is cancelled
-      
-
-            // Return the UI elements for each flight that is not booked or is booked but cancelled
-            if (!isBooked ) {
+            
               return Ticket(
-                id: flight.id,
+                id: flight!.id,
                 departurs: flight.departurs,
                 destination: flight.destination,
                 dateArrival: flight.dateArrival,
@@ -42,11 +33,9 @@ class _TicketDisplayState extends State<TicketDisplay> {
                 price: flight.price,
                 isBooked: false,
                 isCancelled: false,
+                index: index,
               );
-            } else {
-              // Return an empty container for booked flights that are not cancelled
-              return Container();
-            }
+            
           },
         );
       },

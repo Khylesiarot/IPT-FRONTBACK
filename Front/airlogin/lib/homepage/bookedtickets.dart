@@ -12,7 +12,7 @@ class BookedTickets extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            width: double.infinity,
+      
             height: 230,
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -65,8 +65,19 @@ class BookedTickets extends StatelessWidget {
         ],
       ),
 
- 
-
+ //edit here 
+    floatingActionButton: FloatingActionButton(
+      onPressed: (){
+        Navigator.pop(context);
+      },
+      backgroundColor: Colors.blue, // Replace with your desired button color
+      shape: const CircleBorder(),
+      child: const Icon(
+        Icons.arrow_back_ios,
+        color: Colors.white,
+      ),
+    ),
+    floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

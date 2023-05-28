@@ -73,3 +73,20 @@ Future<List<Flights>> fetchUserBookedFlights(String userId) async {
     throw Exception('Failed to fetch booked flights');
   }
 }
+
+
+
+Future<List<Flights>> fetchUserBookedFlightsCancelled(String userId) async {
+  final url = 'http://localhost:8000/users/$userId/booked-flights-cancelled/';
+  
+  final response = await http.get(Uri.parse(url));
+  
+  if (response.statusCode == 200) {
+  
+    final data = jsonDecode(response.body) as List<dynamic>;
+    return data.map((item) => Flights.fromJson(item)).toList();
+
+  } else {
+    throw Exception('Failed to fetch booked flights');
+  }
+}

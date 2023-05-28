@@ -18,20 +18,13 @@ class _TicketDisplayState extends State<BookedTicketDisplay> {
   Widget build(BuildContext context) {
     return Consumer<TimsProvider>(
       builder: (context, provider, _) {
-        final List<Flights?> bookedFlights = provider.bookedFlights;
+        final List<Flights?> bookedFlights = provider.bookedFlights; //pwede ra mo buhat api na mo return for flights na cancelled para mo update largo
 
         return ListView.builder(
           itemCount: bookedFlights.length,
           itemBuilder: (context, index) {
             final flight = bookedFlights[index];
 
-            // Check if the flight is cancelled
-            bool isCancelled = provider.bookedFlightsList
-                .firstWhere((bf) => bf.flight == flight!.id)
-                .isCancelled;
-
-            // Return the UI elements for each flight that is not cancelled
-            if (!isCancelled) {
               return Dismissible(
                 key: UniqueKey(),
                 direction: DismissDirection.horizontal,
@@ -40,17 +33,17 @@ class _TicketDisplayState extends State<BookedTicketDisplay> {
                   final userId = user[0]!.userId;
                   final flightId = flight.id;
 
-                  final String response =
-                      await cancelBookedFlight(userId, flightId);
-                  context
-                      .read<TimsProvider>()
-                      .editBookedFlightCancellationStatus(flightId);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  final bool response = await cancelBookedFlight(userId, flightId);
+                
+                  if(response) {
+                    context.read<TimsProvider>().lBookedFlightCancelled(flight);
+                    context.read<TimsProvider>().removedBookedFlightSS(index);
+                      ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(response),
+                      content: Text("reservation cancelled!"),
                     ),
                   );
+                  }
                 },
                 child: Ticket(
                   id: flight!.id,
@@ -61,12 +54,10 @@ class _TicketDisplayState extends State<BookedTicketDisplay> {
                   price: flight.price,
                   isBooked: true,
                   isCancelled: false,
+                  index: index,
                 ),
               );
-            } else {
-              // Return an empty container for cancelled flights
-              return Container();
-            }
+            
           },
         );
       },

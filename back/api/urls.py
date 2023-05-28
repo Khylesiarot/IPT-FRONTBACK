@@ -10,6 +10,7 @@ urlpatterns = [
     path('bookedflights/<str:user_id>', views.getUserBookedFlights),
     path('savedbookflights/', views.create_booked_flight),
     path('users/<str:user_id>/booked-flights/', views.get_user_booked_flights, name='user_booked_flights'),
+    path('users/<str:user_id>/booked-flights-cancelled/', views.get_cancelled_flights, name='user_booked_flights'),
     path('users/<str:user_id>/bookedflights/<str:flight_id>/cancel/', views.cancel_booked_flight, name='cancel_booked_flight'),
     path('users/<str:user_id>/bookedflights/<str:flight_id>/rebooked/', views.rebooked_flight, name='rebooked_flight'),
     path('register/', views.register_user),

@@ -38,9 +38,11 @@ def users_list(request, email= ""):
 @api_view(['GET'])
 @csrf_exempt
 def get_flights(request):
-    flights = Flights.objects.all()
+    booked_flight_ids = Bookedflights.objects.values_list('flight_id', flat=True)
+    flights = Flights.objects.exclude(id__in=booked_flight_ids)
     serializer = FlightsSerializer(flights, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 @csrf_exempt
@@ -93,12 +95,17 @@ def getUserBookedFlights(request, user_id):
 
 @api_view(['GET'])
 def get_user_booked_flights(request, user_id):
-    booked_flight_ids = Bookedflights.objects.filter(user_id=user_id).values_list('flight_id', flat=True)
+    booked_flight_ids = Bookedflights.objects.filter(user_id=user_id, is_cancelled=False).values_list('flight_id', flat=True)
     booked_flights = Flights.objects.filter(id__in=booked_flight_ids)
     serialized_flights = FlightsSerializer(booked_flights, many=True)
     return Response(serialized_flights.data) 
 
-
+@api_view(['GET'])
+def get_cancelled_flights(request,user_id):
+    cancelled_flight_ids = Bookedflights.objects.filter(user_id= user_id,is_cancelled=True).values_list('flight_id', flat=True)
+    cancelled_flights = Flights.objects.filter(id__in=cancelled_flight_ids)
+    serialized_flights = FlightsSerializer(cancelled_flights, many=True)
+    return Response(serialized_flights.data)
 
 
 @api_view(['PUT', 'POST', 'GET'])
@@ -139,22 +146,15 @@ def create_booked_flight(request):
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 #---
 
-
 @csrf_exempt
+@api_view(['POST'])
 def register_user(request):
-    if request.method == 'POST':
-        data = request.POST
-        userId = data.get('userId')
-        email = data.get('email')
-        password = data.get('password')
-        firstname = data.get('firstname')
-        lastname = data.get('lastname')
+    email = request.data.get('email')
+    if Users.objects.filter(email=email).exists():
+        return Response({'error': 'Email already exists'}, status=400)
 
-        try:
-            user = Users(userId=userId, email=email, password=password, firstname=firstname, lastname=lastname)
-            user.save()
-            return Response({'message': 'User registered successfully.'})
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
-
-    return Response({'error': 'Invalid request method.'}, status=400)
+    serializer = UsersSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
